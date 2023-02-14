@@ -32,7 +32,7 @@ const ExpandMore = styled((props) => {
   }),
 }))
 
-const RocketCard = ({ rocket }) => {
+const RocketCard = ({ rocket, setLoading }) => {
   const [expanded, setExpanded] = useState(false)
   const navigate = useNavigate()
   const handleExpandClick = () => {
@@ -56,6 +56,7 @@ const RocketCard = ({ rocket }) => {
     })
       .then((res) => {
         console.log(res.data)
+        setLoading(false)
         navigate('/rocket/view')
       })
       .catch((e) => alert(e.response.data.message))

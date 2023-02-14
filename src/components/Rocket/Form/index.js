@@ -17,11 +17,15 @@ const RocketForm = () => {
     description: Yup.string().required(
       'please provide rocket descriptioin'
     ),
-    height: Yup.string().required('please provide rocket hiegt'),
-    diameter: Yup.string().required(
-      'please provide rocket diameter'
-    ),
-    mass: Yup.string().required('please provide rocket mass'),
+    height: Yup.number()
+      .required('please provide rocket hiegt')
+      .positive('Please Enter a Positive Number'),
+    diameter: Yup.number()
+      .required('please provide rocket diameter')
+      .positive('Please Enter a Positive Number'),
+    mass: Yup.number()
+      .required('please provide rocket mass')
+      .positive('Please Enter a Positive Number'),
   })
   const token = localStorage.getItem('token')
   const role = localStorage.getItem('role')
