@@ -15,6 +15,7 @@ import {
   Card,
   CardMedia,
   CardActions,
+  Pagination,
 } from '@mui/material'
 
 import {
@@ -25,15 +26,18 @@ import {
   ExpandMore,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import ReactPagination from 'react-paginate'
 
 import { styled } from '@mui/material/styles'
 import { red } from '@mui/material/colors'
+import { Stack } from '@mui/system'
 export default function ViewRocket() {
   const role = localStorage.getItem('role')
   const token = localStorage.getItem('token')
   const [rockets, setRockets] = useState([])
   const [loading, setLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [pageNumber, setPageNumber] = useState(1)
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const handleExpandClick = () => {
@@ -61,12 +65,13 @@ export default function ViewRocket() {
   useEffect(() => {
     Axios({
       method: 'get',
-      url: 'rocket',
+      url: `rocket?page=${pageNumber}&limit=${2}`,
       headers: {
         Authorization: token,
       },
     })
       .then((res) => {
+        setRockets(null)
         setRockets(res.data)
         setLoading(true)
       })
@@ -76,13 +81,15 @@ export default function ViewRocket() {
         )
         setLoading(true)
       })
-  }, [loading])
-
+  }, [loading, pageNumber])
+  const handlePageChange = (e, v) => {
+    setPageNumber(v)
+  }
   return (
     <Grid containter spacing={2}>
       <Grid item xs={12}>
         <Grid container justify='center' spacing={2}>
-          {loading ? (
+          {loading && rockets ? (
             rockets.map((rocket) => (
               <Grid key={rocket._id} item>
                 <Card sx={{ maxWidth: 345 }}>
@@ -170,6 +177,18 @@ export default function ViewRocket() {
           )}
           <h1>{error}</h1>
         </Grid>
+      </Grid>
+      <Grid item xs={12}>
+        <Stack spacing={3} style={{ marginTop: '12rem' }}>
+          <Pagination
+            count={10}
+            page={pageNumber}
+            onChange={handlePageChange}
+            shape='rounded'
+            showFirstButton
+            showLastButton
+          />
+        </Stack>
       </Grid>
     </Grid>
   )
