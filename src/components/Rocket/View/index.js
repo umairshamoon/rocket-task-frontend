@@ -34,6 +34,7 @@ export default function ViewRocket() {
   const [rockets, setRockets] = useState([])
   const [loading, setLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
   const handleExpandClick = () => {
     setExpanded(!expanded)
@@ -69,7 +70,12 @@ export default function ViewRocket() {
         setRockets(res.data)
         setLoading(true)
       })
-      .catch((e) => console.log(e))
+      .catch((e) => {
+        setError(
+          e.response.data.message || 'Someting Went Wrong'
+        )
+        setLoading(true)
+      })
   }, [loading])
 
   return (
@@ -162,6 +168,7 @@ export default function ViewRocket() {
           ) : (
             <LoaderComponent />
           )}
+          <h1>{error}</h1>
         </Grid>
       </Grid>
     </Grid>
